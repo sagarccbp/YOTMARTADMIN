@@ -1,0 +1,20 @@
+export const USER_LOGIN = "user/login";
+export const USER = "user";
+export const UPLOADS = "uploads";
+export const ADD_PRODUCTS = "items";
+export const CATEGORIES = "categories";
+export const UPDATE_CATEGORIES = "updateCategory";
+export const SUB_CATEGORIES = "sub_categories";
+export const UPDATE_SUBCATEGORY = "updateSubcategories";
+
+export const GET_BANNERS = "homeScreenItems/banners";
+export const BANNERS = "homeScreenItems/banners";
+export const HOMESCREENITEMS = "homeScreenItems";
+export const ADD_BANNERS = "homeScreenItems/banners";
+export const SUBCATEGORIES_OF_CATEGORY = "categories/subcategories";
+export const GET_PRODUCTS = "items";
+export const GET_MY_OWN_PRODUCTS = "items/user";
+export const GET_MY_OWN_SUBCAT = "sub_categories/user";
+export const GET_MY_OWN_CATEGORIES = "categories/user";
+export const GET_MY_ORDERS = "orders/owner";
+export const GET_MY_OWN_BANNERS = "homeScreenItems/banners";
