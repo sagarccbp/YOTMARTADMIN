@@ -1,7 +1,7 @@
 import {format} from "date-fns";
-export const API_SERVER = "http://localhost:9000/";
+// export const API_SERVER = "http://localhost:9000/";
 
-// export const API_SERVER = "https://api.yotmart.in/";
+export const API_SERVER = "https://api.yotmart.in/";
 
 export const API_KEY = process.env.REACT_APP_API_KEY;
 export const BLUEDART_CLIENT_ID = process.env.REACT_APP_BLUEDART_CLIENT_ID;
