@@ -1,16 +1,27 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import Modal from "react-bootstrap/Modal";
 // import $ from "jquery";
-import {getOrders, getItems, getUsers} from "../../rest/ApiService.js";
+import {getOrders, getItems, makePhonePe} from "../../rest/ApiService.js";
 // import { ChartShow } from "./ChartShow/ChartShow";
 // import FlagEcom from "./Flag/FlagEcom";
 // import { flagData } from "./Data";
 import Chart from "react-apexcharts";
-import {getMonthlyReports} from "../../rest/ApiService.js";
+import {getMonthlyReports, getUserAddress} from "../../rest/ApiService.js";
 // import {Link, NavLink} from "react-router-dom";
 import {format} from "date-fns";
-import {useState, useEffect} from "react";
 
 export default function Dashboard() {
+  const userDetails = JSON.parse(localStorage.getItem("user"));
+  const [loggedInUser, setLoggedInUser] = useState({});
+  const [show, setShow] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const handleClose = () => {
+    setShow(false);
+    // reload();
+  };
+  const reload = () => window.location.reload();
+  const handleShow = () => setShow(true);
+
   const [newOrders, setNewOrders] = useState([]);
   const [ordersInTransition, setTransitionOrders] = useState([]);
   const [ordersCompleted, setOrderCompleted] = useState([]);
@@ -22,7 +33,7 @@ export default function Dashboard() {
   const [filteredList, setFilteredList] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [userData, setUserData] = useState([]);
-
+  const [userAddress, setUserAddress] = useState();
   const [params, setParams] = useState({});
   const [statistics, setStatistics] = useState([]);
 
@@ -86,6 +97,44 @@ export default function Dashboard() {
       data: [],
     },
   ]);
+
+  // useEffect(() => {
+  //   setLoggedInUser(userDetails);
+  // }, []);
+
+  useEffect(() => {
+    console.log(userDetails.user, "SGARAAA");
+    if (!userDetails.user.isSubscribed) {
+      const timeId = setTimeout(() => {
+        setShow(true);
+        setLoading(false);
+      }, 5000);
+
+      return () => clearTimeout(timeId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userDetails && userDetails.user && userDetails.user._id) {
+      getUserAddress(userDetails.user._id, result => {
+        if (result && result.address && result.address.length > 0) {
+          setUserAddress(result.address[0]);
+          console.log(result.address[0]._id, "ADDRESSS");
+        }
+      });
+    }
+  }, []);
+
+  const adminPay = e => {
+    e.preventDefault();
+    console.log("ADMINPAY");
+    if (userAddress && userAddress._id) {
+      makePhonePe(userAddress._id, res => {
+        console.log(res, "PHONEPE");
+        window.location.replace(res.data.instrumentResponse.redirectInfo.url);
+      });
+    }
+  };
 
   useEffect(() => {
     const rPrice = [];
@@ -339,350 +388,372 @@ export default function Dashboard() {
   //     });
   //   });
   return (
-    <div className="main-content">
-      <section className="section">
-        <div className="row">
-          <div className="col-lg-4 col-md-4 col-sm-12">
-            <div className="card card-statistic-2">
-              <div className="card-stats">
-                <div className="card-stats-title">Order Statistics</div>
-                <div className="card-stats-items">
-                  <div className="card-stats-item">
-                    <div className="card-stats-item-count">
-                      {newOrders.length}
-                    </div>
-                    <div className="card-stats-item-label">Pending</div>
-                  </div>
-                  <div className="card-stats-item">
-                    <div className="card-stats-item-count">
-                      {ordersInTransition.length}
-                    </div>
-                    <div className="card-stats-item-label">Shipping</div>
-                  </div>
-                  <div className="card-stats-item">
-                    <div className="card-stats-item-count">
-                      {ordersCompleted.length}
-                    </div>
-                    <div className="card-stats-item-label">Completed</div>
-                  </div>
-                </div>
-              </div>
-              <div className="card-icon shadow-default realfoodbgcolor">
-                <i className="fas fa-archive"></i>
-              </div>
-              <div className="card-wrap">
-                <div className="card-header">
-                  <h4>Total Orders</h4>
-                </div>
-                <div className="card-body">
-                  {masterData ? masterData.length : ""}
-                </div>
-              </div>
-            </div>
+    <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header>
+          <Modal.Title className="realfoodcolor">Take Subscription</Modal.Title>
+          <div onClick={handleClose}>
+            <i
+              className="fa fa-window-close fa-2x"
+              style={{color: "#0b0e8e"}}></i>
           </div>
-          <div className="col-lg-4 col-md-4 col-sm-12">
-            <div className="card card-statistic-2">
-              <div className="card-stats">
-                <div className="card-stats-title">Products Statistics</div>
-                <div className="card-stats-items">
-                  {/* <div className="card-stats-item">
-                    <div className="card-stats-item-count">
-                      {newOrders.length}
-                    </div>
-                    <div className="card-stats-item-label">Pending</div>
-                  </div> */}
-                  {/* <div className="card-stats-item">
-                    <div className="card-stats-item-count">
-                      {ordersInTransition.length}
-                    </div>
-                    <div className="card-stats-item-label">Shipping</div>
-                  </div> */}
-                  {/* <div className="card-stats-item">
-                    <div className="card-stats-item-count">
-                      {ordersCompleted.length}
-                    </div>
-                    <div className="card-stats-item-label">Completed</div>
-                  </div> */}
-                </div>
-              </div>
-              <div className="card-icon shadow-default realfoodbgcolor">
-                <i className="fas fa-shopping-bag"></i>
-              </div>
-              <div className="card-wrap">
-                <div className="card-header">
-                  <h4>No of Products</h4>
-                </div>
-                <div className="card-body">{filteredCategories.length}</div>
-              </div>
-            </div>
-          </div>
+        </Modal.Header>
 
-          <div className="col-lg-4 col-md-4 col-sm-12">
-            <div className="card card-statistic-2">
-              <div className="card-stats">
-                <div className="card-stats-title">Customer Statistics</div>
-                <div className="card-stats-items">
-                  {/* <div className="card-stats-item">
+        <Modal.Body>
+          <h1>PAYMENT</h1>
+          <button
+            onClick={e => {
+              adminPay(e);
+            }}
+            type="button">
+            PAY
+          </button>
+        </Modal.Body>
+      </Modal>
+      <div className="main-content">
+        <section className="section">
+          <div className="row">
+            <div className="col-lg-4 col-md-4 col-sm-12">
+              <div className="card card-statistic-2">
+                <div className="card-stats">
+                  <div className="card-stats-title">Order Statistics</div>
+                  <div className="card-stats-items">
+                    <div className="card-stats-item">
+                      <div className="card-stats-item-count">
+                        {newOrders.length}
+                      </div>
+                      <div className="card-stats-item-label">Pending</div>
+                    </div>
+                    <div className="card-stats-item">
+                      <div className="card-stats-item-count">
+                        {ordersInTransition.length}
+                      </div>
+                      <div className="card-stats-item-label">Shipping</div>
+                    </div>
+                    <div className="card-stats-item">
+                      <div className="card-stats-item-count">
+                        {ordersCompleted.length}
+                      </div>
+                      <div className="card-stats-item-label">Completed</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-icon shadow-default realfoodbgcolor">
+                  <i className="fas fa-archive"></i>
+                </div>
+                <div className="card-wrap">
+                  <div className="card-header">
+                    <h4>Total Orders</h4>
+                  </div>
+                  <div className="card-body">
+                    {masterData ? masterData.length : ""}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-4 col-sm-12">
+              <div className="card card-statistic-2">
+                <div className="card-stats">
+                  <div className="card-stats-title">Products Statistics</div>
+                  <div className="card-stats-items">
+                    {/* <div className="card-stats-item">
                     <div className="card-stats-item-count">
                       {newOrders.length}
                     </div>
                     <div className="card-stats-item-label">Pending</div>
                   </div> */}
-                  {/* <div className="card-stats-item">
+                    {/* <div className="card-stats-item">
                     <div className="card-stats-item-count">
                       {ordersInTransition.length}
                     </div>
                     <div className="card-stats-item-label">Shipping</div>
                   </div> */}
-                  {/* <div className="card-stats-item">
+                    {/* <div className="card-stats-item">
                     <div className="card-stats-item-count">
                       {ordersCompleted.length}
                     </div>
                     <div className="card-stats-item-label">Completed</div>
                   </div> */}
+                  </div>
+                </div>
+                <div className="card-icon shadow-default realfoodbgcolor">
+                  <i className="fas fa-shopping-bag"></i>
+                </div>
+                <div className="card-wrap">
+                  <div className="card-header">
+                    <h4>No of Products</h4>
+                  </div>
+                  <div className="card-body">{filteredCategories.length}</div>
                 </div>
               </div>
-              <div className="card-icon realfoodbgcolor">
-                <i className="far fa-user"></i>
-              </div>
-              {/* <div className="card-icon shadow-default realfoodbgcolor">
+            </div>
+
+            <div className="col-lg-4 col-md-4 col-sm-12">
+              <div className="card card-statistic-2">
+                <div className="card-stats">
+                  <div className="card-stats-title">Customer Statistics</div>
+                  <div className="card-stats-items">
+                    {/* <div className="card-stats-item">
+                    <div className="card-stats-item-count">
+                      {newOrders.length}
+                    </div>
+                    <div className="card-stats-item-label">Pending</div>
+                  </div> */}
+                    {/* <div className="card-stats-item">
+                    <div className="card-stats-item-count">
+                      {ordersInTransition.length}
+                    </div>
+                    <div className="card-stats-item-label">Shipping</div>
+                  </div> */}
+                    {/* <div className="card-stats-item">
+                    <div className="card-stats-item-count">
+                      {ordersCompleted.length}
+                    </div>
+                    <div className="card-stats-item-label">Completed</div>
+                  </div> */}
+                  </div>
+                </div>
+                <div className="card-icon realfoodbgcolor">
+                  <i className="far fa-user"></i>
+                </div>
+                {/* <div className="card-icon shadow-default realfoodbgcolor">
                 <i className="fas fa-shopping-bag"></i>
               </div> */}
-              <div className="card-wrap">
-                <div className="card-header">
-                  <h4>No of Customer</h4>
+                <div className="card-wrap">
+                  <div className="card-header">
+                    <h4>No of Customer</h4>
+                  </div>
+                  <div className="card-body">{userData.length}</div>
                 </div>
-                <div className="card-body">{userData.length}</div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col-lg-8">
-            <div className="card">
-              <div className="card-header">
-                <h4>Amount and Orders statistics</h4>
-                <div className="card-header-form"></div>
-              </div>
-              <div className="card-body">
-                <Chart
-                  options={options}
-                  series={series}
-                  type="area"
-                  width="600"
-                  height="400"
-                />
+          <div className="row">
+            <div className="col-lg-8">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Amount and Orders statistics</h4>
+                  <div className="card-header-form"></div>
+                </div>
+                <div className="card-body">
+                  <Chart
+                    options={options}
+                    series={series}
+                    type="area"
+                    width="600"
+                    height="400"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-lg-4">
-            <div className="card gradient-bottom">
-              <div className="card-header">
-                <h4>Top 5 Products</h4>
-                <div className="card-header-action dropdown">
-                  <a
-                    href="#"
-                    data-toggle="dropdown"
-                    className="btn btn-danger dropdown-toggle">
-                    Month
-                  </a>
-                  <ul className="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-                    <li className="dropdown-title">Select Period</li>
-                    <li>
-                      <a href="#" className="dropdown-item">
-                        Today
-                      </a>
+            <div className="col-lg-4">
+              <div className="card gradient-bottom">
+                <div className="card-header">
+                  <h4>Top 5 Products</h4>
+                  <div className="card-header-action dropdown">
+                    <a
+                      href="#"
+                      data-toggle="dropdown"
+                      className="btn btn-danger dropdown-toggle">
+                      Month
+                    </a>
+                    <ul className="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                      <li className="dropdown-title">Select Period</li>
+                      <li>
+                        <a href="#" className="dropdown-item">
+                          Today
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="dropdown-item">
+                          Week
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="dropdown-item active">
+                          Month
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="dropdown-item">
+                          This Year
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="card-body" id="top-5-scroll">
+                  <ul className="list-unstyled list-unstyled-border">
+                    <li className="media">
+                      <img
+                        className="mr-3 rounded"
+                        width="55"
+                        src="../assets/img/products/product-3-50.png"
+                        alt="product"
+                      />
+                      <div className="media-body">
+                        <div className="float-right">
+                          <div className="font-weight-600 text-muted text-small">
+                            86 Sales
+                          </div>
+                        </div>
+                        <div className="media-title">oPhone S9 Limited</div>
+                        <div className="mt-1">
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-primary"
+                              data-width="64%"></div>
+                            <div className="budget-price-label">$68,714</div>
+                          </div>
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-danger"
+                              data-width="43%"></div>
+                            <div className="budget-price-label">$38,700</div>
+                          </div>
+                        </div>
+                      </div>
                     </li>
-                    <li>
-                      <a href="#" className="dropdown-item">
-                        Week
-                      </a>
+                    <li className="media">
+                      <img
+                        className="mr-3 rounded"
+                        width="55"
+                        src="../assets/img/products/product-4-50.png"
+                        alt="product"
+                      />
+                      <div className="media-body">
+                        <div className="float-right">
+                          <div className="font-weight-600 text-muted text-small">
+                            67 Sales
+                          </div>
+                        </div>
+                        <div className="media-title">iBook Pro 2018</div>
+                        <div className="mt-1">
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-primary"
+                              data-width="84%"></div>
+                            <div className="budget-price-label">$107,133</div>
+                          </div>
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-danger"
+                              data-width="60%"></div>
+                            <div className="budget-price-label">$91,455</div>
+                          </div>
+                        </div>
+                      </div>
                     </li>
-                    <li>
-                      <a href="#" className="dropdown-item active">
-                        Month
-                      </a>
+                    <li className="media">
+                      <img
+                        className="mr-3 rounded"
+                        width="55"
+                        src="../assets/img/products/product-1-50.png"
+                        alt="product"
+                      />
+                      <div className="media-body">
+                        <div className="float-right">
+                          <div className="font-weight-600 text-muted text-small">
+                            63 Sales
+                          </div>
+                        </div>
+                        <div className="media-title">Headphone Blitz</div>
+                        <div className="mt-1">
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-primary"
+                              data-width="34%"></div>
+                            <div className="budget-price-label">$3,717</div>
+                          </div>
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-danger"
+                              data-width="28%"></div>
+                            <div className="budget-price-label">$2,835</div>
+                          </div>
+                        </div>
+                      </div>
                     </li>
-                    <li>
-                      <a href="#" className="dropdown-item">
-                        This Year
-                      </a>
+                    <li className="media">
+                      <img
+                        className="mr-3 rounded"
+                        width="55"
+                        src="../assets/img/products/product-3-50.png"
+                        alt="product"
+                      />
+                      <div className="media-body">
+                        <div className="float-right">
+                          <div className="font-weight-600 text-muted text-small">
+                            28 Sales
+                          </div>
+                        </div>
+                        <div className="media-title">oPhone X Lite</div>
+                        <div className="mt-1">
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-primary"
+                              data-width="45%"></div>
+                            <div className="budget-price-label">$13,972</div>
+                          </div>
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-danger"
+                              data-width="30%"></div>
+                            <div className="budget-price-label">$9,660</div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li className="media">
+                      <img
+                        className="mr-3 rounded"
+                        width="55"
+                        src="../assets/img/products/product-5-50.png"
+                        alt="product"
+                      />
+                      <div className="media-body">
+                        <div className="float-right">
+                          <div className="font-weight-600 text-muted text-small">
+                            19 Sales
+                          </div>
+                        </div>
+                        <div className="media-title">Old Camera</div>
+                        <div className="mt-1">
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-primary"
+                              data-width="35%"></div>
+                            <div className="budget-price-label">$7,391</div>
+                          </div>
+                          <div className="budget-price">
+                            <div
+                              className="budget-price-square bg-danger"
+                              data-width="28%"></div>
+                            <div className="budget-price-label">$5,472</div>
+                          </div>
+                        </div>
+                      </div>
                     </li>
                   </ul>
                 </div>
-              </div>
-              <div className="card-body" id="top-5-scroll">
-                <ul className="list-unstyled list-unstyled-border">
-                  <li className="media">
-                    <img
-                      className="mr-3 rounded"
-                      width="55"
-                      src="../assets/img/products/product-3-50.png"
-                      alt="product"
-                    />
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">
-                          86 Sales
-                        </div>
-                      </div>
-                      <div className="media-title">oPhone S9 Limited</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-primary"
-                            data-width="64%"></div>
-                          <div className="budget-price-label">$68,714</div>
-                        </div>
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-danger"
-                            data-width="43%"></div>
-                          <div className="budget-price-label">$38,700</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img
-                      className="mr-3 rounded"
-                      width="55"
-                      src="../assets/img/products/product-4-50.png"
-                      alt="product"
-                    />
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">
-                          67 Sales
-                        </div>
-                      </div>
-                      <div className="media-title">iBook Pro 2018</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-primary"
-                            data-width="84%"></div>
-                          <div className="budget-price-label">$107,133</div>
-                        </div>
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-danger"
-                            data-width="60%"></div>
-                          <div className="budget-price-label">$91,455</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img
-                      className="mr-3 rounded"
-                      width="55"
-                      src="../assets/img/products/product-1-50.png"
-                      alt="product"
-                    />
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">
-                          63 Sales
-                        </div>
-                      </div>
-                      <div className="media-title">Headphone Blitz</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-primary"
-                            data-width="34%"></div>
-                          <div className="budget-price-label">$3,717</div>
-                        </div>
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-danger"
-                            data-width="28%"></div>
-                          <div className="budget-price-label">$2,835</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img
-                      className="mr-3 rounded"
-                      width="55"
-                      src="../assets/img/products/product-3-50.png"
-                      alt="product"
-                    />
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">
-                          28 Sales
-                        </div>
-                      </div>
-                      <div className="media-title">oPhone X Lite</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-primary"
-                            data-width="45%"></div>
-                          <div className="budget-price-label">$13,972</div>
-                        </div>
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-danger"
-                            data-width="30%"></div>
-                          <div className="budget-price-label">$9,660</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img
-                      className="mr-3 rounded"
-                      width="55"
-                      src="../assets/img/products/product-5-50.png"
-                      alt="product"
-                    />
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">
-                          19 Sales
-                        </div>
-                      </div>
-                      <div className="media-title">Old Camera</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-primary"
-                            data-width="35%"></div>
-                          <div className="budget-price-label">$7,391</div>
-                        </div>
-                        <div className="budget-price">
-                          <div
-                            className="budget-price-square bg-danger"
-                            data-width="28%"></div>
-                          <div className="budget-price-label">$5,472</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div className="card-footer pt-3 d-flex justify-content-center">
-                <div className="budget-price justify-content-center">
-                  <div
-                    className="budget-price-square bg-primary"
-                    data-width="20"></div>
-                  <div className="budget-price-label">Selling Price</div>
-                </div>
-                <div className="budget-price justify-content-center">
-                  <div
-                    className="budget-price-square bg-danger"
-                    data-width="20"></div>
-                  <div className="budget-price-label">Budget Price</div>
+                <div className="card-footer pt-3 d-flex justify-content-center">
+                  <div className="budget-price justify-content-center">
+                    <div
+                      className="budget-price-square bg-primary"
+                      data-width="20"></div>
+                    <div className="budget-price-label">Selling Price</div>
+                  </div>
+                  <div className="budget-price justify-content-center">
+                    <div
+                      className="budget-price-square bg-danger"
+                      data-width="20"></div>
+                    <div className="budget-price-label">Budget Price</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        {/* <div className="row">
+          {/* <div className="row">
           <div className="col-md-6">
             <div className="card">
               <div className="card-header">
@@ -788,7 +859,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div> */}
-        {/* <div className="row">
+          {/* <div className="row">
           <div className="col-md-8">
             <div className="card">
               <div className="card-header">
@@ -951,7 +1022,8 @@ export default function Dashboard() {
             </div>
           </div>
         </div> */}
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }

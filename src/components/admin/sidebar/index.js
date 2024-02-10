@@ -1,17 +1,69 @@
-import React, {Component} from "react";
-
+import React, {useState, useEffect} from "react";
+import Modal from "react-bootstrap/Modal";
 import {Link, NavLink} from "react-router-dom";
 import {Data} from "./data";
+import {makePhonePe} from "../../../rest/ApiService";
+import {LoginComponent} from "../../../pages/LoginComponent";
 // import SidebarGlobal from "../../../js/SidebarGlobal";
 
-export class SideBar extends Component {
-  componentDidMount() {}
-  render() {
-    return (
+export const SideBar = () => {
+  // const userDetails = JSON.parse(localStorage.getItem("user"));
+  // const [loggedInUser, setLoggedInUser] = useState({});
+  // const [show, setShow] = useState(false);
+
+  // const [isLoading, setLoading] = useState(false);
+  // const handleClose = () => {
+  //   setShow(false);
+  //   // reload();
+  // };
+  // const reload = () => window.location.reload();
+  // const handleShow = () => setShow(true);
+  // console.log(userDetails);
+  // useEffect(() => {
+  //   setLoggedInUser(userDetails);
+  // }, []);
+
+  // useEffect(() => {
+  //   const timeId = setTimeout(() => {
+  //     setShow(true);
+  //     setLoading(false);
+  //   }, 5000);
+
+  //   return () => clearTimeout(timeId);
+  // }, []);
+
+  // const adminPay = e => {
+  //   e.preventDefault();
+  //   console.log("ADMINPAY");
+  // };
+
+  return (
+    <>
+      {/* <Modal show={show} onHide={handleClose}>
+        <Modal.Header>
+          <Modal.Title className="realfoodcolor">Take Subscription</Modal.Title>
+          <div onClick={handleClose}>
+            <i
+              className="fa fa-window-close fa-2x"
+              style={{color: "#0b0e8e"}}></i>
+          </div>
+        </Modal.Header>
+
+        <Modal.Body>
+          <h1>PAYMENT</h1>
+          <button
+            onClick={e => {
+              adminPay(e);
+            }}
+            type="button">
+            PAY
+          </button>
+        </Modal.Body>
+      </Modal> */}
       <div className="main-sidebar">
         <aside id="sidebar-wrapper">
           <div className="sidebar-brand">
-            <Link to="/"> YOTINDIA </Link>{" "}
+            <Link to="/"> YOTMART </Link>{" "}
           </div>{" "}
           <div className="sidebar-brand sidebar-brand-sm">
             <Link to="/"> YOT </Link>{" "}
@@ -229,8 +281,8 @@ export class SideBar extends Component {
           <div className="mt-4 mb-4 p-3 hide-sidebar-mini"></div>{" "}
         </aside>{" "}
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
 export default SideBar;

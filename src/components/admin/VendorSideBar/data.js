@@ -28,11 +28,11 @@ export const Data = {
     // },
     {
       dropdown: true,
-      name: "Suppliers",
+      name: "Producers",
       icon: "fas fa-th-large",
       children: [
         {
-          name: "Suppliers",
+          name: "Producers",
           url: "/createsuppliers",
         },
       ],
@@ -90,21 +90,21 @@ export const Data = {
     //   ],
     // },
 
-    {
-      header: true,
-      name: "Order Requests",
-    },
-    {
-      dropdown: true,
-      name: "Orders",
-      icon: "fas fa-th-large",
-      children: [
-        {
-          name: "Check for Orders",
-          url: "/myorders",
-        },
-      ],
-    },
+    // {
+    //   header: true,
+    //   name: "Order Requests",
+    // },
+    // {
+    //   dropdown: true,
+    //   name: "Orders",
+    //   icon: "fas fa-th-large",
+    //   children: [
+    //     {
+    //       name: "Check for Orders",
+    //       url: "/myorders",
+    //     },
+    //   ],
+    // },
     // {
     //   header: true,
     //   name: "Others",

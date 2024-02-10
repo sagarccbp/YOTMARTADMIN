@@ -191,7 +191,7 @@ const Vendors = () => {
       sortable: true,
     },
     {
-      name: "Vendor Name",
+      name: "Area Manager Name",
       selector: row => row.fullName,
       sortable: true,
     },
@@ -230,12 +230,12 @@ const Vendors = () => {
           <div className="main-content">
             <section className="section">
               <div className="section-header">
-                <h1>Vendors</h1>
+                <h1>Area Managers</h1>
                 <div className="section-header-breadcrumb">
                   <div className="breadcrumb-item active">
                     <a href="/">Super Admin Dashboard</a>
                   </div>
-                  <div className="breadcrumb-item">Vendors</div>
+                  <div className="breadcrumb-item">Area Managers</div>
                 </div>
               </div>
               <div className="section-body">
@@ -245,7 +245,9 @@ const Vendors = () => {
                       <div className="card-body">
                         <DataTable
                           title={
-                            <h5 className="realfoodcolor">List of Vendors</h5>
+                            <h5 className="realfoodcolor">
+                              List of Area Managers
+                            </h5>
                           }
                           className="questions"
                           columns={columns}

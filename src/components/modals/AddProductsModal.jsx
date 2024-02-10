@@ -31,6 +31,7 @@ export default function AddProductModal() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [address, setAddress] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const selectCategoryRef = useRef();
   const [previewXL, setPreviewXL] = useState();
@@ -633,6 +634,56 @@ export default function AddProductModal() {
                       ) : (
                         ""
                       )}
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="form-group">
+                        <label>Select Address</label>
+                        <select
+                          name="role"
+                          id="roles"
+                          className="form-control"
+                          // value={userData.role}
+                          // onChange={changeHandler}
+                        >
+                          <option value="ADD1">
+                            {" "}
+                            Sagar,9849252590,534123,penugonda,D no:2-175/4,deva
+                            village,penugonda mandal,west godavari
+                            district,andhrapradesh,near bus stand,9030189967
+                          </option>
+                          <option value="ADD2">
+                            {" "}
+                            Sagar,9849252590,534123,penugonda,D no:2-175/4,deva
+                            village,penugonda mandal,west godavari
+                            district,andhrapradesh,near bus stand,9030189967
+                          </option>
+                          <option value="ADD3">
+                            {" "}
+                            Sagar,9849252590,534123,penugonda,D no:2-175/4,deva
+                            village,penugonda mandal,west godavari
+                            district,andhrapradesh,near bus stand,9030189967
+                          </option>
+                          <option value="ADD4">
+                            {" "}
+                            Sagar,9849252590,534123,penugonda,D no:2-175/4,deva
+                            village,penugonda mandal,west godavari
+                            district,andhrapradesh,near bus stand,9030189967
+                          </option>
+                        </select>
+                        {/* {error && selectedCategories.length == 0 ? (
+                          <label className="text-danger">
+                            Please select the Categories and subcategories
+                          </label>
+                        ) : error && selectedSubCategories.length == 0 ? (
+                          <label className="text-danger">
+                            Please select the SubCategories
+                          </label>
+                        ) : (
+                          ""
+                        )} */}
+                      </div>
                     </div>
                   </div>
 

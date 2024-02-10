@@ -180,7 +180,7 @@ export default function MyOrders() {
       grow: 2,
     },
     {
-      name: "Assign Orders",
+      name: "Action",
       cell: (row, index) => (
         <div className="d-flex flex-row">
           <button
@@ -194,8 +194,8 @@ export default function MyOrders() {
           <div
             className="dropdown-menu w-100 btn-xs text-left"
             style={{padding: "10px", zIndex: "5", position: "relative"}}>
-            <OrdersAssign item={row} />
-            {/* <ShippingModal item={row} /> */}
+            {/* <OrdersAssign item={row} /> */}
+            <ShippingModal item={row} />
           </div>
         </div>
       ),

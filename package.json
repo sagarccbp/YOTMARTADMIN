@@ -1,6 +1,6 @@
 {
   "name": "adminpanel",
-  "home": "https://admin.yotmart.in",
+ 
   "version": "0.1.0",
   "private": true,
   "dependencies": {

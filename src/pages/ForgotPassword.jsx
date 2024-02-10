@@ -8,7 +8,7 @@ const ForgotPassword = () => {
           <div className="row">
             <div className="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
               <div className="login-brand">
-                <b className="realfoodcolor">RealFoods</b>
+                <b className="realfoodcolor">YOTMART</b>
                 <p style={{fontSize: "10px", color: "#fda900"}}>
                   <b>Food is Medicine</b>
                 </p>
@@ -55,7 +55,7 @@ const ForgotPassword = () => {
                 </div>
               </div>
               <div className="simple-footer realfoodcolor">
-                Copyright &copy; Prasad 2024
+                Copyright &copy; YOTMART 2024
               </div>
             </div>
           </div>

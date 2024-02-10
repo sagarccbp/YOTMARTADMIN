@@ -110,7 +110,7 @@ function App() {
             exact
             component={SuperAdminDashboard}
           />
-          <ProtectedRoute path="/createvendor" exact component={Vendors} />
+          <ProtectedRoute path="/createareamanager" exact component={Vendors} />
 
           <ProtectedRoute path="/vendor" exact component={VendorDashboard} />
           <ProtectedRoute path="/createsuppliers" exact component={Suppliers} />

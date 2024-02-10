@@ -11,7 +11,7 @@ export class SideBar extends Component {
       <div className="main-sidebar">
         <aside id="sidebar-wrapper">
           <div className="sidebar-brand">
-            <Link to="/"> YOTINDIA </Link>{" "}
+            <Link to="/"> YOTMART </Link>{" "}
           </div>{" "}
           <div className="sidebar-brand sidebar-brand-sm">
             <Link to="/"> YOT </Link>{" "}

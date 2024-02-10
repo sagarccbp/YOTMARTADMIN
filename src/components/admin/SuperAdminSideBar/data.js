@@ -28,12 +28,12 @@ export const Data = {
     // },
     {
       dropdown: true,
-      name: "Vendors",
+      name: "Area Managers",
       icon: "fas fa-th-large",
       children: [
         {
-          name: "Vendors",
-          url: "/createvendor",
+          name: "Area Managers",
+          url: "/createareamanager",
         },
       ],
     },

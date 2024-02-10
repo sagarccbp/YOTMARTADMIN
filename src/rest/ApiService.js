@@ -1,7 +1,7 @@
 import {format} from "date-fns";
-// export const API_SERVER = "http://localhost:9000/";
+export const API_SERVER = "http://localhost:9000/";
 
-export const API_SERVER = "https://api.yotmart.in/";
+// export const API_SERVER = "https://api.yotmart.in/";
 
 export const API_KEY = process.env.REACT_APP_API_KEY;
 export const BLUEDART_CLIENT_ID = process.env.REACT_APP_BLUEDART_CLIENT_ID;
@@ -1840,5 +1840,95 @@ export const getAllSuppliers = callBackFunction => {
     .catch(err => {
       console.log(err);
       return err;
+    });
+};
+
+export const createNewAddress = (state, userId, callBackFunction) => {
+  const body = {
+    name: state.name,
+    contactNumber: state.contactNumber,
+    city: state.city,
+    pin: state.pin,
+    area: state.area,
+    district: state.district,
+    state: state.state,
+    userId: userId,
+    houseNumber: state.houseNumber,
+    isDefaultAddress: state.isDefaultAddress,
+    landMark: state.landMark,
+    alternativeMobileNumber: state.alternativeMobileNumber,
+  };
+
+  fetch(`${API_SERVER}address`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("Authorization"),
+    },
+    body: JSON.stringify(body),
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return response.status;
+      }
+    })
+    .then(data => {
+      callBackFunction(data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const makePhonePe = (addressId, callBack) => {
+  let body = {amount: 100, address: addressId};
+  fetch(`${API_SERVER}adminPhonePe/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("Authorization"),
+    },
+    body: JSON.stringify(body),
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return response.status;
+      }
+    })
+    .then(data => {
+      console.log("DATAAA", data);
+      callBack(data);
+    })
+    .catch(error => {
+      callBack(error);
+    });
+};
+
+export const getUserAddress = (userId, callBackFunction) => {
+  fetch(`${API_SERVER}address/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("Authorization"),
+    },
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return response.status;
+      }
+    })
+    .then(data => {
+      console.log(data);
+      callBackFunction(data);
+    })
+
+    .catch(error => {
+      console.log(error);
     });
 };
