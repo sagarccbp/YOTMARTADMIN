@@ -26,28 +26,28 @@ export const Data = {
         },
       ],
     },
-    // {
-    //   dropdown: true,
-    //   name: "Subcategories",
-    //   icon: "fas fa-th-large",
-    //   children: [
-    //     {
-    //       name: "Sub categories",
-    //       url: "/subCategories",
-    //     },
-    //   ],
-    // },
-    // {
-    //   dropdown: true,
-    //   name: "Categories",
-    //   icon: "fas fa-th",
-    //   children: [
-    //     {
-    //       name: "Categories",
-    //       url: "/categories",
-    //     },
-    //   ],
-    // },
+    {
+      dropdown: true,
+      name: "Subcategories",
+      icon: "fas fa-th-large",
+      children: [
+        {
+          name: "Sub categories",
+          url: "/subCategories",
+        },
+      ],
+    },
+    {
+      dropdown: true,
+      name: "Categories",
+      icon: "fas fa-th",
+      children: [
+        {
+          name: "Categories",
+          url: "/categories",
+        },
+      ],
+    },
 
     {
       header: true,
@@ -68,33 +68,33 @@ export const Data = {
       header: true,
       name: "Others",
     },
-    // {
-    //   dropdown: true,
-    //   name: "Home Screen Items",
-    //   icon: "fas fa-th",
-    //   children: [
-    //     // {
-    //     //   name: "Banners",
-    //     //   url: "/banner",
-    //     // },
-    //     // {
-    //     //   name: "Trending Items",
-    //     //   url: "/trendingItems",
-    //     // },
-    //     {
-    //       name: "Static Elements",
-    //       url: "/staticelements",
-    //     },
-    //     // {
-    //     //   name: "Other Home Screen Items",
-    //     //   url: "/homescreenitems",
-    //     // },
-    //     {
-    //       name: "All Home Screen Items",
-    //       url: "/allhomescreenitems",
-    //     },
-    //   ],
-    // },
+    {
+      dropdown: true,
+      name: "Home Screen Items",
+      icon: "fas fa-th",
+      children: [
+        //     // {
+        //     //   name: "Banners",
+        //     //   url: "/banner",
+        //     // },
+        //     // {
+        //     //   name: "Trending Items",
+        //     //   url: "/trendingItems",
+        //     // },
+        {
+          name: "Static Elements",
+          url: "/staticelements",
+        },
+        //     // {
+        //     //   name: "Other Home Screen Items",
+        //     //   url: "/homescreenitems",
+        //     // },
+        {
+          name: "All Home Screen Items",
+          url: "/allhomescreenitems",
+        },
+      ],
+    },
     {
       header: true,
       name: "Analytics",

@@ -1,7 +1,8 @@
 import {format} from "date-fns";
-// export const API_SERVER = "http://localhost:9000/";
 
-export const API_SERVER = "https://api.yotmart.in/";
+export const API_SERVER = "http://localhost:9000/";
+
+// export const API_SERVER = "https://api.yotmart.in/";
 
 export const API_KEY = process.env.REACT_APP_API_KEY;
 export const BLUEDART_CLIENT_ID = process.env.REACT_APP_BLUEDART_CLIENT_ID;
@@ -1930,5 +1931,63 @@ export const getUserAddress = (userId, callBackFunction) => {
 
     .catch(error => {
       console.log(error);
+    });
+};
+
+export const getAllSubCategories = callBackFunction => {
+  fetch(`${API_SERVER}sub_categories`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("Authorization"),
+      API_KEY: API_KEY,
+    },
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return response.status;
+      }
+    })
+    .then(data => {
+      if (Number.isInteger(data)) {
+        callBackFunction(data);
+        return data;
+      } else {
+        callBackFunction(data);
+        return data;
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return err;
+    });
+};
+
+export const getAllItems = callBackFunction => {
+  fetch(`${API_SERVER}items`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("Authorization"),
+      API_KEY: API_KEY,
+    },
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return response.status;
+      }
+    })
+    .then(data => {
+      if (Number.isInteger(data)) {
+        callBackFunction(data);
+        return data;
+      } else {
+        callBackFunction(data);
+        return data;
+      }
     });
 };

@@ -7,19 +7,21 @@ import {getOrders, getItems, makePhonePe} from "../../rest/ApiService.js";
 // import { flagData } from "./Data";
 import Chart from "react-apexcharts";
 import {getMonthlyReports, getUserAddress} from "../../rest/ApiService.js";
-// import {Link, NavLink} from "react-router-dom";
+// import {Link, NavLink, useSearchParams} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {format} from "date-fns";
 
 export default function Dashboard() {
   const userDetails = JSON.parse(localStorage.getItem("user"));
   const [loggedInUser, setLoggedInUser] = useState({});
+  // const [searchParams, setSearchParams] = useSearchParams();
   const [show, setShow] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const handleClose = () => {
     setShow(false);
     // reload();
   };
-  const reload = () => window.location.reload();
+  // const reload = () => window.location.reload();
   const handleShow = () => setShow(true);
 
   const [newOrders, setNewOrders] = useState([]);
@@ -28,14 +30,18 @@ export default function Dashboard() {
   const [selectedItem, setSelectedItem] = useState("");
   const [showOrdersList, setShowOrdersList] = useState([]);
   const [showCancelledList, setCancelledList] = useState([]);
-  const [search, setSearch] = useState("");
+  const [searchh, setSearch] = useState("");
   const [masterData, setOrders] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [userData, setUserData] = useState([]);
   const [userAddress, setUserAddress] = useState();
-  const [params, setParams] = useState({});
+  const {search} = useLocation();
+  const [params, setParams] = useState(new URLSearchParams(search));
   const [statistics, setStatistics] = useState([]);
+
+  // const paramField = query.get('field');
+  // const paramValue = query.get('value');
 
   var today = new Date(),
     date =
@@ -103,7 +109,7 @@ export default function Dashboard() {
   // }, []);
 
   useEffect(() => {
-    console.log(userDetails.user, "SGARAAA");
+    // console.log(userDetails.user, "SGARAAA");
     if (!userDetails.user.isSubscribed) {
       const timeId = setTimeout(() => {
         setShow(true);
@@ -387,6 +393,28 @@ export default function Dashboard() {
   //       },
   //     });
   //   });
+
+  useEffect(() => {
+    console.log(params, "S");
+    if (params.size > 0) {
+      const phonePeRes = params.get("data");
+      console.log(phonePeRes, "P");
+
+      const decodedData = atob(phonePeRes);
+      console.log(decodedData, "P");
+      const data = JSON.parse(decodedData);
+      console.log(data, "P");
+
+      if (data && data.code === "PAYMENT_SUCCESS") {
+        window.location.replace("admin");
+        setParams({});
+        if (params.size === 0) {
+          window.location.reload(true);
+        }
+      }
+    }
+  }, []);
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -546,7 +574,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4">
+            {/* <div className="col-lg-4">
               <div className="card gradient-bottom">
                 <div className="card-header">
                   <h4>Top 5 Products</h4>
@@ -751,7 +779,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           {/* <div className="row">
           <div className="col-md-6">

@@ -4,9 +4,9 @@ import Multiselect from "multiselect-react-dropdown";
 import {
   addHomeScreenItems,
   getStaticElements,
-  getCategories,
-  getItems,
-  getSubCategories,
+  getDietCategories,
+  getAllSubCategories,
+  getAllItems,
 } from "../../rest/ApiService";
 
 export default function AddAllHomeScreenItemsModal() {
@@ -87,18 +87,21 @@ export default function AddAllHomeScreenItemsModal() {
   }, [homeScreenItems]);
 
   useEffect(() => {
-    getItems(result => {
-      // console.log(result);
+    getAllItems(result => {
+      console.log(result.items);
       setItems(result.items);
     });
-    getCategories(result => {
+    getDietCategories(result => {
       setCategories(result.categories);
+      console.log(result.categories);
     });
-    getSubCategories(result => {
+    getAllSubCategories(result => {
       setSubCategories(result.subCategory);
+      console.log(result.subCategory);
     });
     getStaticElements(result => {
       setStaticElements(result.items);
+      console.log(result.items);
     });
   }, []);
 
@@ -340,7 +343,7 @@ export default function AddAllHomeScreenItemsModal() {
 
               <select
                 className="form-control"
-                onChange={selectHomeScreenItemsType}>
+                onChange={e => selectHomeScreenItemsType(e)}>
                 <option value={"Choose"}>Choose Type</option>
                 <option value={"BANNERS"}>Banners</option>
                 <option value={"STATIC_ELEMENTS"}>Static Elements</option>
@@ -368,7 +371,6 @@ export default function AddAllHomeScreenItemsModal() {
               ""
             ) : (
               <>
-                {" "}
                 {layoutType === "BANNERS" ? (
                   categories && categories.length > 0 ? (
                     <div className="form-group">
